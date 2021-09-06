@@ -1,5 +1,7 @@
 import { io } from "./http";
 
 io.on("connection", (socket) => {
-    console.log(socket.id);
+    socket.on("select_room", (data) => {
+        console.log(data);
+    });
 });
