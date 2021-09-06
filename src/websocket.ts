@@ -8,6 +8,15 @@ interface IUserRoom {
 
 const users: IUserRoom[] = [];
 
+interface IMessage {
+    room: string;
+    text: string;
+    created_at: Date;
+    username: string;
+}
+
+const messages: IMessage[] = [];
+
 io.on("connection", (socket) => {
     socket.on("select_room", (data) => {
         socket.join(data.room);
@@ -25,7 +34,20 @@ io.on("connection", (socket) => {
                 room: data.room,
             });
         }
+    });
 
-        console.log(users);
+    socket.on("message", (data) => {
+        const message: IMessage = {
+            room: data.room,
+            text: data.message,
+            username: data.username,
+            created_at: new Date(),
+        };
+
+        messages.push(message);
+
+        console.log(messages);
+
+        io.to(data.room).emit("message", message);
     });
 });

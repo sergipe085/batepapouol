@@ -11,4 +11,26 @@ socket.emit("select_room", {
     room,
 });
 
+socket.on("message", (data) => {
+    console.log(data);
+});
+
+document
+    .getElementById("message_input")
+    .addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            const message = event.target.value;
+            // eslint-disable-next-line no-param-reassign
+            event.target.value = "";
+
+            const data = {
+                room,
+                message,
+                username,
+            };
+
+            socket.emit("message", data);
+        }
+    });
+
 console.log(username, room);
