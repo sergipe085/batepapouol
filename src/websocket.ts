@@ -34,6 +34,12 @@ io.on("connection", (socket) => {
                 room: data.room,
             });
         }
+
+        const room_messages = messages.filter(
+            (message) => message.room === data.room
+        );
+
+        socket.emit("messages", room_messages);
     });
 
     socket.on("message", (data) => {
