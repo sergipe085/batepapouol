@@ -18,7 +18,7 @@ interface IMessage {
 const messages: IMessage[] = [];
 
 io.on("connection", (socket) => {
-    socket.on("select_room", (data) => {
+    socket.on("select_room", (data, callback) => {
         socket.join(data.room);
 
         const userInRoom = users.find(
@@ -35,11 +35,9 @@ io.on("connection", (socket) => {
             });
         }
 
-        const room_messages = messages.filter(
-            (message) => message.room === data.room
-        );
-
-        socket.emit("messages", room_messages);
+        // eslint-disable-next-line no-use-before-define
+        const messagesRoom = getMessagesRoom(data.room);
+        callback(messagesRoom);
     });
 
     socket.on("message", (data) => {
@@ -57,3 +55,7 @@ io.on("connection", (socket) => {
         io.to(data.room).emit("message", message);
     });
 });
+
+function getMessagesRoom(room: string) {
+    return messages.filter((message) => message.room === room);
+}

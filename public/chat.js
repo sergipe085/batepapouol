@@ -9,6 +9,14 @@ const room = urlSearch.get("select_room");
 
 const messages_container = document.getElementById("messages_container");
 
+const usernameDiv = document.getElementById("username");
+
+usernameDiv.innerHTML = `Ola ${username} - Voce esta na sala ${room}`;
+
+document.getElementById("logout").addEventListener("click", (event) => {
+    window.location.href = "index.html";
+});
+
 function addMessage(data) {
     const newMessage = document.createElement("div");
     newMessage.className = "new_message";
@@ -22,17 +30,19 @@ function addMessage(data) {
     messages_container.appendChild(newMessage);
 }
 
-socket.emit("select_room", {
-    username,
-    room,
-});
+socket.emit(
+    "select_room",
+    {
+        username,
+        room,
+    },
+    (res) => {
+        res.forEach((message) => addMessage(message));
+    }
+);
 
 socket.on("message", (data) => {
     addMessage(data);
-});
-
-socket.on("messages", (data) => {
-    data.forEach((message) => addMessage(message));
 });
 
 document
