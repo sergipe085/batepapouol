@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // eslint-disable-next-line no-undef
 const socket = io("http://localhost:3333");
 
@@ -13,7 +14,9 @@ function addMessage(data) {
     newMessage.className = "new_message";
     newMessage.innerHTML = `
         <label class="form-label">
-            <strong> ${data.username} </strong> <span> ${data.text} - ${data.created_at} </span>
+            <strong> ${data.username} </strong> <span> ${data.text} - ${dayjs(
+        data.created_at
+    ).format("DD/MM HH:mm")} </span>
         </label>`;
 
     messages_container.appendChild(newMessage);
